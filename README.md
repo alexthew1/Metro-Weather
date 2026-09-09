@@ -10,7 +10,7 @@ Built with **React Native**, **Expo SDK 54**, and **TypeScript**, engineered aro
 [![Expo](https://img.shields.io/badge/Expo-SDK_54-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![New Architecture](https://img.shields.io/badge/New_Architecture-Enabled-34A853?style=for-the-badge)](https://reactnative.dev/docs/the-new-architecture/landing-page)
-[![Platform](https://img.shields.io/badge/Platforms-Android_%7C_iOS_%7C_Web-orange?style=for-the-badge)](https://github.com/alexthew1/Metro-Weather)
+[![Platform](https://img.shields.io/badge/Platforms-Android-orange?style=for-the-badge)](https://github.com/alexthew1/Metro-Weather)
 
 </div>
 
