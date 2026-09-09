@@ -50,6 +50,11 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
       } catch (e) {
         console.warn('Failed to load locations from storage:', e);
+      } finally {
+        // Request permissions on boot and refresh location if granted
+        requestCurrentLocation().catch((err) => {
+          console.warn('Boot location request error:', err);
+        });
       }
     })();
   }, []);
@@ -99,21 +104,67 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setIsLoadingLocation(false);
         return false;
       }
 
-      const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-      const [address] = await Location.reverseGeocodeAsync({
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude,
-      });
+      // Check if location provider is enabled on device
+      try {
+        const enabled = await Location.hasServicesEnabledAsync();
+        if (!enabled) {
+          console.warn('Location services are not enabled on device');
+          return false;
+        }
+      } catch (e) {
+        console.warn('Error checking location services:', e);
+      }
+
+      // Attempt to get last known position first (fastest and reliable on emulators/devices)
+      let loc: Location.LocationObject | null = null;
+      try {
+        loc = await Location.getLastKnownPositionAsync({});
+      } catch (e) {
+        console.warn('getLastKnownPosition failed, will request current position:', e);
+      }
+
+      // If no last known position, request fresh position with timeout safeguard
+      if (!loc) {
+        loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+      }
+
+      if (!loc || !loc.coords) {
+        return false;
+      }
+
+      // Reverse geocode with safety catch so network/geocoding failure doesn't block location update
+      let address: Location.LocationGeocodedAddress | undefined;
+      try {
+        const results = await Location.reverseGeocodeAsync({
+          latitude: loc.coords.latitude,
+          longitude: loc.coords.longitude,
+        });
+        if (results && results.length > 0) {
+          address = results[0];
+        }
+      } catch (geocodeErr) {
+        console.warn('Reverse geocode failed (using coordinates fallback):', geocodeErr);
+      }
+
+      const cityName =
+        address?.city ||
+        address?.subregion ||
+        address?.name ||
+        'Current Location';
+
+      const region = address?.region || address?.district || '';
+      const country = address?.country || '';
 
       const currentLoc: WeatherLocation = {
         id: 'current-gps-location',
-        cityName: address?.city || address?.subregion || 'Current Location',
-        region: address?.region || address?.district || '',
-        country: address?.country || '',
+        cityName,
+        region,
+        country,
         latitude: loc.coords.latitude,
         longitude: loc.coords.longitude,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'auto',
@@ -122,12 +173,12 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
       addLocation(currentLoc);
       setActiveLocation(currentLoc);
-      setIsLoadingLocation(false);
       return true;
     } catch (err) {
       console.warn('GPS location request failed:', err);
-      setIsLoadingLocation(false);
       return false;
+    } finally {
+      setIsLoadingLocation(false);
     }
   };
 

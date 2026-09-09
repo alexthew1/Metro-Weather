@@ -37,12 +37,7 @@ export class WeatherRepository {
 
     // 2. Fetch fresh data
     try {
-      let freshData: WeatherDataBundle;
-      if (location.id === 'phoenix-az' && !navigator.onLine) {
-        freshData = await this.mockProvider.getWeatherData(location, model);
-      } else {
-        freshData = await this.primaryProvider.getWeatherData(location, model);
-      }
+      const freshData = await this.primaryProvider.getWeatherData(location, model);
 
       // Save to cache
       await AsyncStorage.setItem(cacheKey, JSON.stringify(freshData));

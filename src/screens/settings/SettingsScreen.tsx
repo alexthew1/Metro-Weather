@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Modal,
   BackHandler,
+  Platform,
+  StatusBar as RNStatusBar,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -80,18 +82,37 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ visible, onClose
     return () => sub.remove();
   }, [visible, onClose]);
 
+  const topInset = Math.max(
+    insets.top,
+    Platform.OS === 'android' ? (RNStatusBar.currentHeight || 24) : 20
+  );
+  const bottomInset = Math.max(
+    insets.bottom,
+    Platform.OS === 'android' ? 16 : 0
+  );
+
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View
         style={[
           styles.container,
           {
-            paddingTop: insets.top + 8,
+            paddingTop: topInset + 6,
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
           },
         ]}
       >
         {/* Windows Phone Settings Header */}
-        <View style={styles.header}>
+        <View
+          style={[
+            styles.header,
+            {
+              paddingLeft: Math.max(insets.left, horizontalScale(18)),
+              paddingRight: Math.max(insets.right, horizontalScale(18)),
+            },
+          ]}
+        >
           <Text style={styles.appSuperTitle}>METRO WEATHER</Text>
           <Text style={styles.headerTitle}>settings</Text>
         </View>
@@ -99,7 +120,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ visible, onClose
         <ScrollView
           contentContainerStyle={[
             styles.scrollContent,
-            { paddingBottom: 88 },
+            {
+              paddingBottom: 68 + bottomInset + 32,
+              paddingLeft: Math.max(insets.left, horizontalScale(18)),
+              paddingRight: Math.max(insets.right, horizontalScale(18)),
+            },
           ]}
           showsVerticalScrollIndicator={false}
         >
@@ -283,7 +308,17 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ visible, onClose
         </ScrollView>
 
         {/* Windows Phone Bottom Application Bar */}
-        <View style={styles.bottomBar}>
+        <View
+          style={[
+            styles.bottomBar,
+            {
+              height: 68 + bottomInset,
+              paddingBottom: bottomInset,
+              paddingLeft: insets.left,
+              paddingRight: insets.right,
+            },
+          ]}
+        >
           <DoneButton onPress={onClose} accentColor={accentColor} />
         </View>
       </View>
@@ -403,7 +438,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000', // Pure OLED Black
   },
   header: {
-    paddingHorizontal: horizontalScale(18),
     paddingTop: 6,
     paddingBottom: 4,
   },
@@ -426,7 +460,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   scrollContent: {
-    paddingHorizontal: horizontalScale(18),
     paddingTop: 8,
   },
   sectionHeader: {
@@ -570,7 +603,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 72,
     backgroundColor: '#1C1B1A',
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.15)',

@@ -73,8 +73,8 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({
             <View style={styles.periodRow}>
               <Text style={styles.periodTemp}>{todayHighNum}°</Text>
               <View style={styles.periodTextGroup}>
-                <Text style={styles.periodTitle}>Today</Text>
-                <Text style={styles.periodCondition}>
+                <Text style={styles.periodTitle} numberOfLines={1}>Today</Text>
+                <Text style={styles.periodCondition} numberOfLines={1} ellipsizeMode="tail">
                   {current.todayConditionText || current.conditionText}
                 </Text>
               </View>
@@ -84,8 +84,8 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({
             <View style={[styles.periodRow, { marginTop: 14 }]}>
               <Text style={styles.periodTemp}>{tonightLowNum}°</Text>
               <View style={styles.periodTextGroup}>
-                <Text style={styles.periodTitle}>Tonight</Text>
-                <Text style={styles.periodCondition}>
+                <Text style={styles.periodTitle} numberOfLines={1}>Tonight</Text>
+                <Text style={styles.periodCondition} numberOfLines={1} ellipsizeMode="tail">
                   {current.tonightConditionText || 'Partly Cloudy'}
                 </Text>
               </View>
@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   leftColumn: {
-    flex: 1.08,
-    paddingRight: horizontalScale(10),
+    flex: 1.25,
+    paddingRight: horizontalScale(8),
   },
   periodRow: {
     flexDirection: 'row',
@@ -197,30 +197,32 @@ const styles = StyleSheet.create({
   },
   periodTemp: {
     fontFamily: fontFamilies.light,
-    fontSize: normalizeFont(50),
+    fontSize: normalizeFont(46),
     fontWeight: '200',
     color: colors.white,
-    minWidth: 72,
-    lineHeight: normalizeFont(52),
+    minWidth: horizontalScale(54),
+    lineHeight: normalizeFont(48),
     letterSpacing: -1,
   },
   periodTextGroup: {
-    marginLeft: 4,
+    flex: 1,
+    marginLeft: horizontalScale(8),
     justifyContent: 'center',
   },
   periodTitle: {
-    fontFamily: fontFamilies.regular,
-    fontSize: normalizeFont(14),
-    fontWeight: '400',
+    fontFamily: fontFamilies.semiBold,
+    fontSize: normalizeFont(15),
+    fontWeight: '600',
     color: colors.white,
-    lineHeight: normalizeFont(18),
+    lineHeight: normalizeFont(20),
   },
   periodCondition: {
     fontFamily: fontFamilies.regular,
-    fontSize: normalizeFont(14),
+    fontSize: normalizeFont(13),
     fontWeight: '400',
-    color: 'rgba(255, 255, 255, 0.88)',
-    lineHeight: normalizeFont(18),
+    color: 'rgba(255, 255, 255, 0.82)',
+    lineHeight: normalizeFont(17),
+    marginTop: 2,
   },
   attributionText: {
     fontFamily: fontFamilies.regular,

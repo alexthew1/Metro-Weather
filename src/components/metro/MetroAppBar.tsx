@@ -80,13 +80,13 @@ export const MetroAppBar: React.FC<MetroAppBarProps> = ({
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      {/* Primary Action Button Row (Matching Windows Phone 3-button + ellipsis bar) */}
+      {/* Primary Action Button Row (Matching Windows Phone 3-button + top corner ellipsis) */}
       <View
         style={[
           styles.iconRow,
           {
-            paddingLeft: horizontalScale(14) + insets.left,
-            paddingRight: horizontalScale(48) + insets.right,
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
           },
         ]}
       >
@@ -131,14 +131,15 @@ export const MetroAppBar: React.FC<MetroAppBarProps> = ({
           </AppBarCircleButton>
         </View>
 
-        {/* Ellipsis button at far right */}
+        {/* Ellipsis button in top corner */}
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => toggleExpand(!expanded)}
-          style={[styles.dotsButton, { right: 10 + insets.right }]}
+          style={[styles.dotsButton, { right: 8 + insets.right }]}
+          hitSlop={{ top: 8, bottom: 16, left: 16, right: 8 }}
           accessibilityLabel="Application bar menu"
         >
-          <MaterialCommunityIcons name="dots-horizontal" size={28} color={colors.white} />
+          <MaterialCommunityIcons name="dots-horizontal" size={24} color={colors.white} />
         </TouchableOpacity>
       </View>
 
@@ -319,21 +320,23 @@ const styles = StyleSheet.create({
   iconRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    justifyContent: 'center',
     paddingTop: 10,
     height: BAR_COLLAPSED_HEIGHT,
+    position: 'relative',
+    width: '100%',
   },
   centerIcons: {
     flexDirection: 'row',
-    gap: horizontalScale(16),
+    gap: horizontalScale(22),
     alignItems: 'flex-start',
-    flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   dotsButton: {
     position: 'absolute',
-    top: 10,
-    width: 44,
-    height: 46,
+    top: 4,
+    padding: 6,
+    zIndex: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

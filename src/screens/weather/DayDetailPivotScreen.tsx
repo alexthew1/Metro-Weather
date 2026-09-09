@@ -147,7 +147,8 @@ export const DayDetailPivotScreen: React.FC<DayDetailPivotScreenProps> = ({
         <Animated.View style={[styles.pivotHeaderRow, headerStyle]}>
           {dailyList.map((item, index) => {
             const isActive = index === activeDayIndex;
-            const dayText = `${item.dayLabel.toLowerCase()} ${item.dateFormatted.split(' ')[0]}`;
+            const dayNum = item.dateFormatted ? item.dateFormatted.split(' ')[0] : '';
+            const dayText = `${(item.dayLabel || '').toLowerCase()} ${dayNum}`.trim();
             return (
               <TouchableOpacity
                 key={item.date}
