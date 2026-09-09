@@ -216,7 +216,7 @@ Metro-Weather/
 - [Node.js](https://nodejs.org/) (v18 or higher recommended)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 - [Expo CLI](https://docs.expo.dev/get-started/installation/)
-- [Android Studio](https://developer.android.com/studio) (for Android emulator or device builds) or [Xcode](https://developer.apple.com/xcode/) (for iOS)
+- [Android Studio](https://developer.android.com/studio) (for Android emulator or device builds)
 
 ### Installation
 
